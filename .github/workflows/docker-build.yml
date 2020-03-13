@@ -52,7 +52,7 @@ jobs:
       - name: Log into registry
         run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.io -u lhaig --password-stdin
       - name: Build the master tagged Docker image
-        run: docker build . --file Dockerfile --tag $IMAGE_ID:${{steps.vars.outputs.tag}}
+        run: docker build . --file Dockerfile --tag $IMAGE_ID:${{steps.get_version.outputs.VERSION}}
       # - name: Push the master tagged Docker image
       #   run: docker push $IMAGE_ID:${{steps.vars.outputs.tag}}
       - name: Build the latest Docker image

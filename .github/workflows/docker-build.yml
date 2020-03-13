@@ -8,7 +8,7 @@ on:
 
     # Publish `v1.2.3` tags as releases.
     tags:
-      - vdark*
+      - v*
 env:
   # TODO: Change variable to your image's name.
   IMAGE_NAME: anon-app
@@ -43,10 +43,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
       - name: Get the version
-        id: vars
-        run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+      # - name: Get the version
+      #   id: vars
+      #   run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
       - name: Log into registry
         run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.io -u lhaig --password-stdin
       - name: Build the master tagged Docker image

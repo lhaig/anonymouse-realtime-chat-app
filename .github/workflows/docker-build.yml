@@ -15,7 +15,7 @@ on:
 
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: lhaig/anon-app
+  IMAGE_NAME: anon-app
 
 jobs:
   # Run tests.
@@ -51,7 +51,7 @@ jobs:
         run: docker build . --file Dockerfile --tag image
 
       - name: Log into registry
-        run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.pkg.github.com -u lhaig
 
       - name: Push image
         run: |

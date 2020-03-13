@@ -15,7 +15,7 @@ on:
 
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: anon-app
+  IMAGE_NAME: lhaig/anon-app
 
 jobs:
   # Run tests.

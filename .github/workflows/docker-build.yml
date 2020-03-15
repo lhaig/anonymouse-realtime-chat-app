@@ -42,7 +42,7 @@ jobs:
     if: github.event_name == 'push'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
       - name: Get tag
         id: gettag
         uses: "WyriHaximus/github-action-get-previous-tag@master"

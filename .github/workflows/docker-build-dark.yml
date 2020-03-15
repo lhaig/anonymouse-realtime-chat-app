@@ -6,6 +6,7 @@ on:
       - dark-mode
 env:
   IMAGE_NAME: anon-app
+  IMAGE_VERSION: dark-0.03
 
 jobs:
   # Run tests.
@@ -45,8 +46,8 @@ jobs:
 
       - name: Push image
         run: |
-          IMAGE_ID=lhaig/anon-app
-          VERSION=dark-0.03
+          IMAGE_ID=$IMAGE_NAME
+          VERSION=$IMAGE_VERSION
 
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION

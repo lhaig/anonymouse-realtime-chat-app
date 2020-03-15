@@ -5,7 +5,7 @@ on:
     branches:
       - dark-mode
 env:
-  IMAGE_NAME: anon-app
+  IMAGE_NAME: lhaig/anon-app
   IMAGE_VERSION: dark-0.03
 
 jobs:
@@ -39,7 +39,9 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Build image
-        run: docker build . --file Dockerfile --tag image
+        run: |
+          git checkout dark-mode
+          docker build . --file Dockerfile --tag image
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.io -u lhaig --password-stdin

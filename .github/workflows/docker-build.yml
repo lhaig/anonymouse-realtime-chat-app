@@ -36,7 +36,7 @@ jobs:
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
-#     needs: test
+    # needs: test
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
@@ -49,9 +49,9 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUBTOKEN }}"
       - name: show the version
-          id: show_version
-          run: |
-            echo "${{steps.gettag.outputs.tag}}"
+        id: show_version
+        run: |
+          echo "${{steps.gettag.outputs.tag}}"
       # - name: Get the version
       #   id: get_version
       #   run: |

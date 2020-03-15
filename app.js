@@ -12,6 +12,13 @@ const http = require("http").Server(app);
 // require the socket.io module
 const io = require("socket.io");
 
+/*
+const client = io('http://localhost', {
+  // WARNING: in that case, there is no fallback to long-polling
+  transports: ['websocket'] // or [ 'websocket', 'polling' ], which is the same thing
+});
+*/
+
 const port = 5000;
 
 //bodyparser middleware
@@ -35,7 +42,7 @@ const connect = require("./dbconnect");
 socket.on("connection", socket => {
   console.log("user connected");
 
-  socket.on("disconnect", function() {
+   socket.on("disconnect", function () {
     console.log("user disconnected");
   });
 
@@ -68,6 +75,20 @@ socket.on("connection", socket => {
   });
 });
 
+////////////
+const handler = serverNum => (req, res) => {
+  console.log(`server ${serverNum}`, req.method, req.url, req.body);
+  res.send(`Hello from server ${serverNum}!`);
+};
+
+app.get('*', handler(1)).post('*', handler(1));
+app.listen(port, () => {
+  console.log("Running on Port: " + port);
+});
+/////////////
+
+/*
 http.listen(port, () => {
   console.log("Running on Port: " + port);
 });
+*/

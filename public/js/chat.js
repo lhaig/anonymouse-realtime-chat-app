@@ -5,7 +5,7 @@ var messages = document.getElementById("messages");
   $("form").submit(function(e) {
     let li = document.createElement("li");
     e.preventDefault(); // prevents page reloading
-    socket.emit("chat message", $("#message").val());
+   socket.emit("chat message", $("#message").val());
 
     messages.appendChild(li).append($("#message").val());
     let span = document.createElement("span");
@@ -54,14 +54,14 @@ messageInput.addEventListener("keypress", () => {
   socket.emit("typing", { user: "Someone", message: "is typing..." });
 });
 
-socket.on("notifyTyping", data => {
+  socket.on("notifyTyping", data => {
   typing.innerText = data.user + " " + data.message;
   console.log(data.user + data.message);
 });
 
 //stop typing
 messageInput.addEventListener("keyup", () => {
-  socket.emit("stopTyping", "");
+ socket.emit("stopTyping", "");
 });
 
 socket.on("notifyStopTyping", () => {

@@ -43,18 +43,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Get the version
-        id: get_version
-        run: |
-          echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
-          echo "${{steps.get_version.outputs.VERSION}}"
+      - name: Get tag
+        id: gettag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUBTOKEN }}"
+      - name: show the version
+          id: show_version
+          run: |
+            echo "${{steps.gettag.outputs.tag}}"
+      # - name: Get the version
+      #   id: get_version
+      #   run: |
+      #     echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+      #     echo "${{steps.get_version.outputs.VERSION}}"
       # - name: Get the version
       #   id: vars
       #   run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
       - name: Log into registry
         run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.io -u lhaig --password-stdin
       - name: Build the master tagged Docker image
-        run: docker build . --file Dockerfile --tag $IMAGE_ID:${{steps.get_version.outputs.VERSION}}
+        run: docker build . --file Dockerfile --tag $IMAGE_ID:${{steps.gettag.outputs.tag}}
       # - name: Push the master tagged Docker image
       #   run: docker push $IMAGE_ID:${{teps.get_version.outputs.VERSION}}
       - name: Build the latest Docker image

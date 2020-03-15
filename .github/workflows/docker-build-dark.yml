@@ -20,42 +20,42 @@ env:
 jobs:
   # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
-  test:
-    runs-on: ubuntu-latest
+  # test:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
+  #   steps:
+  #     - uses: actions/checkout@v1
 
-      - name: Run tests
-        run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            docker build . --file Dockerfile
-          fi
+  #     - name: Run tests
+  #       run: |
+  #         if [ -f docker-compose.test.yml ]; then
+  #           docker-compose --file docker-compose.test.yml build
+  #           docker-compose --file docker-compose.test.yml run sut
+  #         else
+  #           docker build . --file Dockerfile
+  #         fi
 
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   push:
     # Ensure test job passes before pushing image.
-    needs: test
+    # needs: test
 
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
 
       - name: Build image
         run: docker build . --file Dockerfile --tag image
 
       - name: Log into registry
-        run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.io -u lhaig --password-stdin
 
       - name: Push image
         run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=lhaig/anon-app
 
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
@@ -70,4 +70,4 @@ jobs:
           echo VERSION=$VERSION
 
           docker tag image $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+          # docker push $IMAGE_ID:$VERSION

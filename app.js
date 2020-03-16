@@ -5,19 +5,15 @@ const dateTime = require("simple-datetime-formater");
 const bodyParser = require("body-parser");
 const chatRouter = require("./route/chatroute");
 const loginRouter = require("./route/loginRoute");
+var rootpath = process.env.ROOT_PATH || "/chat";
+console.log('root path set to %s', rootpath)
 
+var router = express.Router();
 //require the http module
 const http = require("http").Server(app);
 
 // require the socket.io module
 const io = require("socket.io");
-
-/*
-const client = io('http://localhost', {
-  // WARNING: in that case, there is no fallback to long-polling
-  transports: ['websocket'] // or [ 'websocket', 'polling' ], which is the same thing
-});
-*/
 
 const port = 5000;
 
@@ -25,15 +21,33 @@ const port = 5000;
 app.use(bodyParser.json());
 
 //routes
-app.use("/chats", chatRouter);
-app.use("/login", loginRouter);
+// app.use("/chats", chatRouter);
+// app.use("/login", loginRouter);
+app.use("/", router);
+app.use(rootpath, router);
 
-//set the express.static middleware
-app.use(express.static(__dirname + "/public"));
+
+router.use(function (req, res, next) {
+  console.log('%s %s %s', req.method, req.url, req.path);
+  next();
+});
+
+
+// this will only be invoked if the path ends in /bar
+// router.use('/chats', chatRouter);
+router.use(rootpath+'/chats', chatRouter);
+router.use('/chats', chatRouter);
+
+// always invoked
+router.use("/",express.static(__dirname + "/public"));
+router.use(rootpath, express.static(__dirname + "/public"));
 
 //integrating socketio
-socket = io(http);
+socket = io(http,{
+  transports: ['websocket']
+});
 
+socket.path(rootpath);
 //database connection
 const Chat = require("./models/Chat");
 const connect = require("./dbconnect");
@@ -75,20 +89,8 @@ socket.on("connection", socket => {
   });
 });
 
-////////////
-const handler = serverNum => (req, res) => {
-  console.log(`server ${serverNum}`, req.method, req.url, req.body);
-  res.send(`Hello from server ${serverNum}!`);
-};
 
-app.get('*', handler(1)).post('*', handler(1));
-app.listen(port, () => {
-  console.log("Running on Port: " + port);
-});
-/////////////
-
-/*
 http.listen(port, () => {
   console.log("Running on Port: " + port);
 });
-*/
+

@@ -28,7 +28,7 @@ var messages = document.getElementById("messages");
 
 // fetching initial chat messages from the database
 (function() {
-  fetch("/chats")
+  fetch("chats")
     .then(data => {
       return data.json();
     })

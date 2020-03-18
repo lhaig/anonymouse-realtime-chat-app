@@ -6,7 +6,7 @@ on:
       - master
 env:
   IMAGE_NAME: lhaig/anon-app
-  IMAGE_VERSION: 0.03
+  IMAGE_VERSION: light-0.03
 
 jobs:
   # Run tests.

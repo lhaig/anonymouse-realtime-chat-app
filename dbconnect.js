@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 mongoose.Promise = require("bluebird");
-var mongourl = process.env.MONGODB_SERVER;
-var port = process.env.MONGODB_PORT;
+var mongourl = process.env.MONGODB_SERVER || "localhost";
+var port = process.env.MONGODB_PORT || 27017;
 
 const url = "mongodb://" + mongourl + ":" + port + "/chat";
 

@@ -43,9 +43,7 @@ router.use("/",express.static(__dirname + "/public"));
 router.use(rootpath, express.static(__dirname + "/public"));
 
 //integrating socketio
-socket = io(http,{
-  transports: ['websocket']
-});
+socket = io(http);
 
 socket.path(rootpath);
 //database connection

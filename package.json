@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app",
-    "pkg": "pkg --target=latest-linux-x64,latest-macos-x64,latest-win-x64 -o ./binaries/chatapp-light app.js"
+    "pkg": "pkg --target=latest-linux-x64,latest-macos-x64,latest-win-x64 -o ./binaries/chatapp-light ."
   },
   "author": "",
   "license": "ISC",

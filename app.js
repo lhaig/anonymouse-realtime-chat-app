@@ -1,4 +1,4 @@
-//require the express module
+// require the express module
 const express = require("express");
 const app = express();
 const dateTime = require("simple-datetime-formater");
@@ -91,4 +91,3 @@ socket.on("connection", socket => {
 http.listen(port, () => {
   console.log("Running on Port: " + port);
 });
-

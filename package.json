@@ -1,12 +1,13 @@
 {
   "name": "chatapp",
-  "version": "1.0.0",
+  "version": "0.0.4",
   "description": "",
   "main": "app.js",
+  "bin": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app",
-    "pkg": "pkg --target=latest-linux-x64 -o guychat app.js"
+    "pkg": "pkg --target=latest-linux-x64,latest-macos-x64,latest-win-x64 -o ./binaries/chatapp-light ."
   },
   "author": "",
   "license": "ISC",
@@ -28,5 +29,13 @@
   },
   "devDependencies": {
     "pkg": "^4.4.4"
+  },
+  "pkg": {
+    "assets": [
+      "public/**/*"
+    ],
+    "targets": [
+      "node12"
+    ]
   }
-}
+}  

@@ -48,7 +48,7 @@ socket = io(http);
 socket.path(rootpath);
 //database connection
 const Chat = require("./models/Chat");
-const connect = require("./dbconnect");
+const connect = require("./dbconnect.js");
 
 //setup event listener
 socket.on("connection", socket => {

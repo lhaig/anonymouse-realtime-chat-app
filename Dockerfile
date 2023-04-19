@@ -1,4 +1,4 @@
-FROM node:17-alpine
+FROM --platform=linux/amd64 node:10
 # Create app directory
 WORKDIR /usr/src/app
 # Install app dependencies

@@ -6,7 +6,7 @@ var data = [
   ];
   var clusterendpoint = process.env.MONGODB_SERVER || "localhost";
   var port = process.env.MONGODB_PORT || 27017;
-  var username = process.env.MONGODB_USERNAME || "docadmin";
+  var username = process.env.MONGODB_USERNAME || "chat";
   var password = process.env.MONGODB_PASSWORD || "password";
   
 //var clusterendpoint = process.env.clusterendpoint;
@@ -21,12 +21,13 @@ fs = require('fs');
  const assert = require('assert');
 
 // Connection URL
-const connstring = `mongodb://${username}:${password}@${clusterendpoint}/sample-database?tls=true&directConnection=true&serverSelectionTimeoutMS=2000&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
+const connstring = `mongodb://${username}:${password}@${clusterendpoint}/sample-database?tls=false&directConnection=true&serverSelectionTimeoutMS=2000&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
 //const connstring = `mongodb://${username}:${password}@${clusterendpoint}/sample-database?tls=true&retryWrites=false`;
 
 // Database Name
 const dbName = 'myproject';
-const client = new MongoClient(connstring, {tlsCAFile: `./rds-combined-ca-bundle.pem`, useNewUrlParser: true, useUnifiedTopology: true});
+const client = new MongoClient(connstring, { useNewUrlParser: true, useUnifiedTopology: true});
+//const client = new MongoClient(connstring, {tlsCAFile: `./rds-combined-ca-bundle.pem`, useNewUrlParser: true, useUnifiedTopology: true});
 
 // Use connect method to connect to the server
 client.connect(function(err) {

@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:10
+FROM --platform=linux/amd64 node:18
 # Create app directory
 WORKDIR /usr/src/app
 # Install app dependencies
@@ -9,6 +9,8 @@ RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production
 # Bundle app source
+RUN apt-get update -y
+RUN apt-get install nano vim -y
 COPY . .
 EXPOSE 5000
 CMD [ "npm", "start" ]

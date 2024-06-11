@@ -4,10 +4,12 @@ var data = [
   {  "name" : "Beth", "status": "active", "level": 7, "score":87},
   {  "name" : "Jesse", "status": "active", "level": 3, "score":27}
   ];
-// var clusterendpoint = 'cluster1-docdb-instance-0.cwwnbexip9py.eu-west-2.docdb.amazonaws.com:27017';
-var clusterendpoint = 'cluster1-docdb-cluster.cluster-cwwnbexip9py.eu-west-2.docdb.amazonaws.com:27017'
-var username = 'docadmin';
-var password = 'password';
+
+  var clusterendpoint = process.env.MONGODB_SERVER || "localhost";
+  var port = process.env.MONGODB_PORT || 27017;
+  var username = process.env.MONGODB_USERNAME || "docadmin";
+  var password = process.env.MONGODB_PASSWORD || "password";
+
 //var clusterendpoint = process.env.clusterendpoint;
 //var username = process.env.username;
   //var password = process.env.password;
@@ -20,7 +22,8 @@ fs = require('fs');
  const assert = require('assert');
 
 // Connection URL
-const connstring = `mongodb://${username}:${password}@${clusterendpoint}/sample-database?tls=true&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
+const connstring = `mongodb://${username}:${password}@${clusterendpoint}/sample-database?tls=true&directConnection=true&serverSelectionTimeoutMS=2000&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
+
 //const connstring = `mongodb://${username}:${password}@${clusterendpoint}/sample-database?tls=true&retryWrites=false`;
 
 // Database Name

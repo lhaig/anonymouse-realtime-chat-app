@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const connectdb = require("./../dbconnect");
+const connectdb = require("../dbconnect.js");
 const Chats = require("./../models/Chat");
 var rootpath = process.env.ROOT_PATH || "/chat";
 

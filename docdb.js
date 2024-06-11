@@ -4,6 +4,7 @@ var data = [
   {  "name" : "Beth", "status": "active", "level": 7, "score":87},
   {  "name" : "Jesse", "status": "active", "level": 3, "score":27}
   ];
+
 var clusterendpoint = process.env.MONGODB_SERVER || "localhost";
 var port = process.env.MONGODB_PORT || 27017;
 var username = process.env.MONGODB_USERNAME || "docadmin";
@@ -27,6 +28,7 @@ var password = process.env.MONGODB_PASSWORD || "password";
   // Database Name
   const dbName = 'myproject';
   const client = new MongoClient(connstring, {tlsCAFile: `./rds-combined-ca-bundle.pem`, useNewUrlParser: true, useUnifiedTopology: true});
+
   
   // Use connect method to connect to the server
   client.connect(function(err) {

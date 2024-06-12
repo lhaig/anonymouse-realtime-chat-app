@@ -11,7 +11,7 @@ console.log('root path set to %s', rootpath)
 //vault connection
 var vault = null
 const use_vault = process.env.USE_VAULT || true;
-if(use_vault){
+if (use_vault) {
   vault = require("./vault");
 }
 
@@ -42,11 +42,11 @@ router.use(function (req, res, next) {
 
 // this will only be invoked if the path ends in /bar
 // router.use('/chats', chatRouter);
-router.use(rootpath+'/chats', chatRouter);
+router.use(rootpath + '/chats', chatRouter);
 router.use('/chats', chatRouter);
 
 // always invoked
-router.use("/",express.static(__dirname + "/public"));
+router.use("/", express.static(__dirname + "/public"));
 router.use(rootpath, express.static(__dirname + "/public"));
 
 //integrating socketio
@@ -62,7 +62,7 @@ const connect = require("./dbconnect.js");
 socket.on("connection", socket => {
   console.log("user connected");
 
-   socket.on("disconnect", function () {
+  socket.on("disconnect", function () {
     console.log("user disconnected");
   });
 
@@ -79,14 +79,15 @@ socket.on("connection", socket => {
     socket.broadcast.emit("notifyStopTyping");
   });
 
-  socket.on("chat message", function(msg) {
+  socket.on("chat message", function (msg) {
     console.log("message: " + msg);
 
     //broadcast message to everyone in port:5000 except yourself.
     socket.broadcast.emit("received", { message: msg });
 
-    if(use_vault){
+    if (use_vault) {
       vault.encryptData(msg).then(response => {
+        console.log(response);
         //save the encrypted chat to the database
         connect.then(db => {
           console.log("connected correctly to the server");
@@ -94,8 +95,7 @@ socket.on("connection", socket => {
           chatMessage.save();
         });
       });
-    }else
-    {
+    } else {
       //save chat to the database
       connect.then(db => {
         console.log("connected correctly to the server");

@@ -14,7 +14,7 @@ console.log('root path set to %s', rootpath)
 
 //vault connection
 var vault = null
-const use_vault = process.env.USE_VAULT || true;
+const use_vault = process.env.USE_VAULT || false;
 if (use_vault) {
   vault = require("./vault");
 }
@@ -28,7 +28,7 @@ var router = express.Router();
 // require the socket.io module
 const io = require("socket.io");
 
-const port = 3000;
+const port = process.env.HTTP_PORT || 3000;
 
 //bodyparser middleware
 app.use(bodyParser.json());
@@ -116,11 +116,14 @@ socket.on("connection", socket => {
    console.log("Running on Port: " + port);
  });
 
- if(true){
+ if(process.env.USE_HTTPS || false){
+  const pkey_path = process.env.PRIVATE_KEY_PATH || 'private-key.pem';
+  const cert_path = process.env.PUBLIC_CERT_PATH || 'public-cert.pem';
+
 //TLS options
 var options = {
-  key: fs.readFileSync('private-key.pem'),
-  cert: fs.readFileSync('public-cert.pem')
+  key: fs.readFileSync(pkey_path),
+  cert: fs.readFileSync(cert_path)
  };
 
  const https = require("https").Server(options, app);

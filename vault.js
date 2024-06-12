@@ -2,14 +2,14 @@ const fetch = require('node-fetch');
 
 // Vault server URL and Transit engine mount path
 const vault_addr = process.env.VAULT_ADDR || "http://localhost:8200";
-const vault_token = process.env.VAULT_TOKEN || ""
-const vault_path = '/v1/transit';
-
+const vault_token = process.env.VAULT_TOKEN || "";
+const vault_path = process.env.VAULT_TRANSIT_MOUNT || "transit";
+const vault_transit_key = process.env.VAULT_TRANSIT_KEY || "chat-key";
 // Encryption endpoint
-const encryptEndpoint = `${vault_addr}${vault_path}/encrypt/chat-key`;
+const encryptEndpoint = `${vault_addr}/v1/${vault_path}/encrypt/${vault_transit_key}`;
 
 // Decryption endpoint
-const decryptEndpoint = `${vault_addr}${vault_path}/decrypt/chat-key`;
+const decryptEndpoint = `${vault_addr}/v1/${vault_path}/decrypt/${vault_transit_key}`;
 
 // Function to base64 encode data
 function base64Encode(data) {

@@ -15,41 +15,60 @@ const router = express.Router();
 router.route("/").get((req, res, next) => {
   res.setHeader("Content-Type", "application/json");
   res.statusCode = 200;
-
+  var retorno = [];
   connectdb.then(db => {
     let data = Chats.find({ message: "Anonymous" });
     Chats.find({}).then(chat => {
       if(use_vault){
-       chat.forEach((item) => {
-          if (item.message.startsWith("vault")) {
-            item.message = vault.decryptData(item.message)
-          }
-        })
-      }
-      let test = vault.decryptData("vault:v1:5/xF9E/yoSID5OKWk+bI5uoNP8jSuzoX7QAb1ca2PFc=")
-      console.log("Test Decrypt",test)
-      res.json(chat);
+        try {
+          chat.forEach((item) => {
+            if (item.message.startsWith("vault:")) {
+            vault.decryptData(item.message).then((msg) => {
+             item.message = msg;
+             console.log(item.message);
+              retorno.push(item);
+            });
+            
+            };
+           })
+        } catch (error) {
+          console.error('Error decrypting data:', error);
+        }
+       
+       }else{
+        retorno = chat
+     }
+       vault.decryptData("vault:v1:CycXZVBlwsMBwi4PW8LE6FbqIqRH/UFwn6VO+zRi+Z3oabQfNXFMOOrNubl1802cO58vqdS2qRO3PSYIWumqbyg=").then(desc => {console.log("Test Decrypt Promise", desc)})
+       
     });
   });
+  res.json(retorno);
 });
 
 router.route(rootpath).get((req, res, next) => {
   res.setHeader("Content-Type", "application/json");
   res.statusCode = 200;
+  var retorno = []
   connectdb.then(db => {
     let data = Chats.find({ message: "Anonymous" });
     Chats.find({}).then(chat => {
       if(use_vault){
         chat.forEach((item) => {
            if (item.message.startsWith("vault:")) {
-            item.message = vault.decryptData(item.message)
+           vault.decryptData(item.message).then((msg) => {
+            item.message = msg
+             retorno.push(item)
+           });
+           console.log(item.message);
            };
           })
+       }else{
+          retorno = chat
        }
-       console.log("Test Decrypt",vault.decryptData("vault:v1:5/xF9E/yoSID5OKWk+bI5uoNP8jSuzoX7QAb1ca2PFc="))
-       res.json(chat);
+       vault.decryptData("vault:v1:CycXZVBlwsMBwi4PW8LE6FbqIqRH/UFwn6VO+zRi+Z3oabQfNXFMOOrNubl1802cO58vqdS2qRO3PSYIWumqbyg=").then(desc => {console.log("Test Decrypt Promise", desc)})
     });
   });
+  res.json(retorno);
 });
 
 module.exports = router;

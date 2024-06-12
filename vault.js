@@ -36,10 +36,11 @@ module.exports.encryptData = async function(plaintext) {
             method: 'POST',
             headers,
             body: JSON.stringify({ "plaintext":base64Encode(plaintext) })
-        });
-        var result = await response.json();
-        console.log('Encrypted data:', result.data.ciphertext);
+        }).then(res => res.json())
+        .then((result) => {
+            console.log('Encrypted data:', result.data.ciphertext);
          return result.data.ciphertext
+        });
     } catch (error) {
         console.error('Error encrypting data:', error);
     }
@@ -52,10 +53,12 @@ module.exports.decryptData = async function(ciphertext) {
             method: 'POST',
             headers,
             body: JSON.stringify({ "ciphertext":ciphertext })
+        }).then(res => res.json())
+        .then((result) => {
+            let plaintext = base64Decode(result.data.plaintext)
+            console.log("decrypted: ", plaintext)
+            return plaintext
         });
-        var result = await response.json();
-        //console.debug('Decrypted data:', base64Decode(result.data.plaintext));
-        return base64Decode(result.data.plaintext)
     } catch (error) {
         console.error('Error decrypting data:', error);
         return error

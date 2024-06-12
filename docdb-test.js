@@ -4,11 +4,12 @@ var data = [
   {  "name" : "Beth", "status": "active", "level": 7, "score":87},
   {  "name" : "Jesse", "status": "active", "level": 3, "score":27}
   ];
+
   var clusterendpoint = process.env.MONGODB_SERVER || "localhost";
   var port = process.env.MONGODB_PORT || 27017;
   var username = process.env.MONGODB_USERNAME || "chat";
   var password = process.env.MONGODB_PASSWORD || "password";
-  
+
 //var clusterendpoint = process.env.clusterendpoint;
 //var username = process.env.username;
   //var password = process.env.password;
@@ -21,7 +22,12 @@ fs = require('fs');
  const assert = require('assert');
 
 // Connection URL
+<<<<<<< HEAD
 const connstring = `mongodb://${username}:${password}@${clusterendpoint}/sample-database?tls=false&directConnection=true&serverSelectionTimeoutMS=2000&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
+=======
+const connstring = `mongodb://${username}:${password}@${clusterendpoint}/sample-database?tls=true&directConnection=true&serverSelectionTimeoutMS=2000&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
+
+>>>>>>> a90aab6d7eabaa2a218a1991498ca8411f84d091
 //const connstring = `mongodb://${username}:${password}@${clusterendpoint}/sample-database?tls=true&retryWrites=false`;
 
 // Database Name

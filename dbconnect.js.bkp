@@ -1,0 +1,13 @@
+const mongoose = require("mongoose");
+mongoose.Promise = require("bluebird");
+var mongourl = process.env.MONGODB_SERVER || "localhost";
+var port = process.env.MONGODB_PORT || 27017;
+var username = process.env.MONGODB_USERNAME || "mongoadmin";
+var password = process.env.MONGODB_PASSWORD || "secret";
+
+ const url = "mongodb://" + mongourl + ":" + port + "/chat";
+// const url = "mongodb://" + username + ":" + password + "@"+ mongourl + ":" + port + "/chat";
+
+const connect = mongoose.connect(url, { useNewUrlParser: true });
+
+module.exports = connect;

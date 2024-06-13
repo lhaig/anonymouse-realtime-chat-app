@@ -1,68 +1,80 @@
 // require the express module
-const tls = require('tls');
 const fs = require('fs');
 const express = require("express");
 const app = express();
-const dateTime = require("simple-datetime-formater");
 const bodyParser = require("body-parser");
 const chatRouter = require("./route/chatroute");
-const loginRouter = require("./route/loginRoute");
-var rootpath = process.env.ROOT_PATH || "/chat";
-console.log('root path set to %s', rootpath)
 
+const https = require("https");
+const http = require("http");
+const ios = require("socket.io");
+const io = require("socket.io");
 
+//database connection
+const Chat = require("./models/Chat");
+const connect = require("./dbconnect.js");
+
+const use_vault = process.env.USE_VAULT || false;
+const port = process.env.HTTP_PORT || 3000;
+const pkey_path = process.env.PRIVATE_KEY_PATH || 'private-key.pem';
+const cert_path = process.env.PUBLIC_CERT_PATH || 'public-cert.pem';
+const use_tls = process.env.HTTP_TLS || false;
+const rootpath = process.env.ROOT_PATH || "";
 
 //vault connection
 var vault = null
-const use_vault = process.env.USE_VAULT || true;
 if (use_vault) {
   vault = require("./vault");
 }
 
-var router = express.Router();
-
-//require the http module
- const http = require("http").Server(app);
-
-
-// require the socket.io module
-const io = require("socket.io");
-
-const port = 3000;
 
 //bodyparser middleware
 app.use(bodyParser.json());
 
-//routes
-// app.use("/chats", chatRouter);
-// app.use("/login", loginRouter);
-app.use("/", router);
-app.use(rootpath, router);
-
-
+var router = express.Router();
 router.use(function (req, res, next) {
   console.log('%s %s %s', req.method, req.url, req.path);
   next();
 });
 
-
 // this will only be invoked if the path ends in /bar
-// router.use('/chats', chatRouter);
+console.log('root path set to %s', rootpath)
 router.use(rootpath + '/chats', chatRouter);
-router.use('/chats', chatRouter);
 
 // always invoked
 router.use("/", express.static(__dirname + "/public"));
 router.use(rootpath, express.static(__dirname + "/public"));
 
+//set the router on the server
+app.use("/", router);
+app.use(rootpath, router);
+
 //integrating socketio
-socket = io(http);
+var socket = null;
+
+if (use_tls) {
+  //TLS options
+  var options = {
+    key: fs.readFileSync(pkey_path),
+    cert: fs.readFileSync(cert_path)
+  };
+
+  server = https.Server(options, app);
+  server.listen(port, () => {
+    console.log("Running on Port: " + port, "with TLS");
+  });
+
+  socket = ios(server);
+} else {
+  server = http.Server(options, app);
+  server.listen(port, () => {
+    console.log("Running on Port: " + port, "without TLS");
+  });
+
+  socket = io(server);
+}
 
 socket.path(rootpath);
-//database connection
-const Chat = require("./models/Chat");
-const connect = require("./dbconnect.js");
-
 
 //setup event listener
 socket.on("connection", socket => {
@@ -111,77 +123,3 @@ socket.on("connection", socket => {
     }
   });
 });
-
- http.listen(port, () => {
-   console.log("Running on Port: " + port);
- });
-
- if(true){
-//TLS options
-var options = {
-  key: fs.readFileSync('private-key.pem'),
-  cert: fs.readFileSync('public-cert.pem')
- };
-
- const https = require("https").Server(options, app);
-
- const ios = require("socket.io");
-//integrating socketio
-securesocket = ios(https);
-
-securesocket.path(rootpath);
-
-//setup event listener
-securesocket.on("connection", securesocket => {
-  console.log("user connected");
-
-  securesocket.on("disconnect", function () {
-    console.log("user disconnected");
-  });
-
-  //Someone is typing
-  securesocket.on("typing", data => {
-    securesocket.broadcast.emit("notifyTyping", {
-      user: data.user,
-      message: data.message
-    });
-  });
-
-  //when soemone stops typing
-  securesocket.on("stopTyping", () => {
-    securesocket.broadcast.emit("notifyStopTyping");
-  });
-
-  securesocket.on("chat message", function (msg) {
-    console.log("message: " + msg);
-
-    //broadcast message to everyone in port:5000 except yourself.
-    securesocket.broadcast.emit("received", { message: msg });
-
-    if (use_vault) {
-      vault.encryptData(msg).then(response => {
-        console.log(response);
-        //save the encrypted chat to the database
-        connect.then(db => {
-          console.log("connected correctly to the server");
-          let chatMessage = new Chat({ message: response, sender: "Anonymous" });
-          chatMessage.save();
-        });
-      });
-    } else {
-      //save chat to the database
-      connect.then(db => {
-        console.log("connected correctly to the server");
-        let chatMessage = new Chat({ message: msg, sender: "Anonymous" });
-        chatMessage.save();
-      });
-    }
-  });
-});
-
-  https.listen(9443, () => {
-    console.log("Running on Port: " + 9443);
-  });
-  
- }
-

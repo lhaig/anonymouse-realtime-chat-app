@@ -6,7 +6,7 @@ var rootpath = process.env.ROOT_PATH || "/chat";
 
 //vault connection
 var vault = null
-const use_vault = process.env.USE_VAULT || true;
+const use_vault = process.env.USE_VAULT || false;
 if (use_vault) {
   vault = require("../vault");
 }

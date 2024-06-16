@@ -27,7 +27,6 @@ if (use_vault) {
   vault = require("./vault");
 }
 
-
 //bodyparser middleware
 app.use(bodyParser.json());
 

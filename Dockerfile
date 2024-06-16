@@ -12,5 +12,5 @@ RUN npm install
 RUN apt-get update -y
 RUN apt-get install nano vim -y
 COPY . .
-EXPOSE 5000
+
 CMD [ "npm", "start" ]

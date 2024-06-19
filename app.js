@@ -97,14 +97,13 @@ socket.on("connection", socket => {
   });
 
   socket.on("chat message", function (msg) {
-    console.log("message: " + msg);
-
+    
     //broadcast message to everyone in port:5000 except yourself.
     socket.broadcast.emit("received", { message: msg });
 
     if (use_vault) {
       vault.encryptData(msg).then(response => {
-        console.log(response);
+        console.log("message: " + response);
         //save the encrypted chat to the database
         connect.then(db => {
           console.log("connected correctly to the server");
@@ -114,6 +113,7 @@ socket.on("connection", socket => {
       });
     } else {
       //save chat to the database
+      console.log("message: " + msg);
       connect.then(db => {
         console.log("connected correctly to the server");
         let chatMessage = new Chat({ message: msg, sender: "Anonymous" });

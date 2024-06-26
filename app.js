@@ -16,6 +16,7 @@ const connect = require("./dbconnect.js");
 
 const use_vault = process.env.USE_VAULT || false;
 const port = process.env.HTTP_PORT || 3000;
+const bind_addr = process.env.BIND_ADDR || "0.0.0.0";
 const pkey_path = process.env.PRIVATE_KEY_PATH || 'private-key.pem';
 const cert_path = process.env.PUBLIC_CERT_PATH || 'public-cert.pem';
 const use_tls = process.env.HTTP_TLS || false;
@@ -59,14 +60,14 @@ if (use_tls) {
   };
 
   server = https.Server(options, app);
-  server.listen(port, () => {
+  server.listen(port, bind_addr, () => {
     console.log("Running on Port: " + port, "with TLS");
   });
 
   socket = ios(server);
 } else {
   server = http.Server(options, app);
-  server.listen(port, () => {
+  server.listen(port, bind_addr, () => {
     console.log("Running on Port: " + port, "without TLS");
   });
 

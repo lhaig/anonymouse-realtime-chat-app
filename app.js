@@ -51,24 +51,25 @@ app.use(rootpath, router);
 
 //integrating socketio
 var socket = null;
+var options = {}
 
 if (use_tls) {
   //TLS options
-  var options = {
+  options = {
     key: fs.readFileSync(pkey_path),
     cert: fs.readFileSync(cert_path)
   };
 
   server = https.Server(options, app);
   server.listen(port, bind_addr, () => {
-    console.log("Running on Port: " + port, "with TLS");
+    console.log("Running on Port: " + port, "Bind Address: " + bind_addr,"with TLS");
   });
 
   socket = ios(server);
 } else {
   server = http.Server(options, app);
   server.listen(port, bind_addr, () => {
-    console.log("Running on Port: " + port, "without TLS");
+    console.log("Running on Port: " + port, "Bind Address: " + bind_addr, "without TLS");
   });
 
   socket = io(server);

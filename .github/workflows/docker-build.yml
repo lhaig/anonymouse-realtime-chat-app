@@ -6,7 +6,7 @@ on:
       - master
 env:
   IMAGE_NAME: guybarros/chat-app
-  IMAGE_VERSION: 0.12
+  IMAGE_VERSION: 0.13
 
 jobs:
   # Run tests.

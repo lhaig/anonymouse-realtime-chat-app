@@ -3,10 +3,10 @@ name: Docker
 on:
   push:
     branches:
-      - master
+      - main
 env:
   IMAGE_NAME: lhaig/anon-app
-  IMAGE_VERSION: light-0.04
+  IMAGE_VERSION: 0.05
 
 jobs:
   # Run tests.
@@ -44,7 +44,7 @@ jobs:
           docker build . --file Dockerfile --tag image
 
       - name: Log into registry
-        run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.io -u lhaig --password-stdin
+        run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.io -u guybarros --password-stdin
 
       - name: Push image
         run: |
@@ -56,6 +56,6 @@ jobs:
 
           docker tag image $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-          
+
           docker tag image $IMAGE_ID:latest
           docker push $IMAGE_ID:latest

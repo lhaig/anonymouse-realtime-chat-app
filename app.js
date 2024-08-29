@@ -16,6 +16,7 @@ const connect = require("./dbconnect.js");
 
 const use_vault = process.env.USE_VAULT || false;
 const port = process.env.HTTP_PORT || 3000;
+const bind_addr = process.env.BIND_ADDR || "0.0.0.0";
 const pkey_path = process.env.PRIVATE_KEY_PATH || 'private-key.pem';
 const cert_path = process.env.PUBLIC_CERT_PATH || 'public-cert.pem';
 const use_tls = process.env.HTTP_TLS || false;
@@ -26,7 +27,6 @@ var vault = null
 if (use_vault) {
   vault = require("./vault");
 }
-
 
 //bodyparser middleware
 app.use(bodyParser.json());
@@ -51,24 +51,25 @@ app.use(rootpath, router);
 
 //integrating socketio
 var socket = null;
+var options = {}
 
 if (use_tls) {
   //TLS options
-  var options = {
+  options = {
     key: fs.readFileSync(pkey_path),
     cert: fs.readFileSync(cert_path)
   };
 
   server = https.Server(options, app);
-  server.listen(port, () => {
-    console.log("Running on Port: " + port, "with TLS");
+  server.listen(port, bind_addr, () => {
+    console.log("Running on Port: " + port, "Bind Address: " + bind_addr,"with TLS");
   });
 
   socket = ios(server);
 } else {
   server = http.Server(options, app);
-  server.listen(port, () => {
-    console.log("Running on Port: " + port, "without TLS");
+  server.listen(port, bind_addr, () => {
+    console.log("Running on Port: " + port, "Bind Address: " + bind_addr, "without TLS");
   });
 
   socket = io(server);
@@ -98,14 +99,13 @@ socket.on("connection", socket => {
   });
 
   socket.on("chat message", function (msg) {
-    console.log("message: " + msg);
-
+    
     //broadcast message to everyone in port:5000 except yourself.
     socket.broadcast.emit("received", { message: msg });
 
     if (use_vault) {
       vault.encryptData(msg).then(response => {
-        console.log(response);
+        console.log("message: " + response);
         //save the encrypted chat to the database
         connect.then(db => {
           console.log("connected correctly to the server");
@@ -115,6 +115,7 @@ socket.on("connection", socket => {
       });
     } else {
       //save chat to the database
+      console.log("message: " + msg);
       connect.then(db => {
         console.log("connected correctly to the server");
         let chatMessage = new Chat({ message: msg, sender: "Anonymous" });

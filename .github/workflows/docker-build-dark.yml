@@ -6,10 +6,10 @@ on:
       - dark-mode
 env:
   IMAGE_NAME: lhaig/anon-app
-  IMAGE_VERSION: dark-0.04
+  IMAGE_VERSION: dark-0.05
 
 jobs:
-  # Run tests.   
+  # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
           docker build . --file Dockerfile --tag image
 
       - name: Log into registry
-        run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.io -u lhaig --password-stdin
+        run: echo "${{ secrets.GITHUBTOKEN }}" | docker login docker.io -u guybarros --password-stdin
 
       - name: Push image
         run: |

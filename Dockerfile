@@ -1,4 +1,6 @@
 FROM node:slim
+
+EXPOSE 5000
 # Create app directory
 WORKDIR /usr/src/app
 # Install app dependencies
